@@ -1,26 +1,31 @@
 package de.quinscape;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Random;
+
 
 public class Gluecksrad {
-    public String retrieveUserInput(){
-        Scanner userInput = new Scanner(System.in);
-        return userInput.nextLine();
+    Scanner input = new Scanner(System.in);
+
+    public static LinkedList<String> cityList() {
+        LinkedList<String> cities = new LinkedList<>();
+        cities.add("Dortmund");
+        cities.add("Bochum");
+        cities.add("Münster");
+        cities.add("Düsseldorf");
+        cities.add("Hamburg");
+        cities.add("Berlin");
+        return cities;
     }
 
-    public void pickRandomWord (List<String> words){
-
+    public void random() {
+        Random randomGenerator = new Random();
+        String randomCity = cityList().get(randomGenerator.nextInt(cityList().size()));
+        System.out.println(randomCity);
     }
 
-    public void wordArray(){
-        String[] cityArray = {"hamburg", "dortmund", "berlin", "düsseldorf", "münchen", "münster"};
-    }
-
-    public static String getRandom(String[] array) {
-        int rnd = new Random().nextInt(array.length);
-        return array[rnd];
-    }
 
 }
