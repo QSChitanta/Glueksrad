@@ -8,8 +8,6 @@ import java.util.Random;
 
 
 public class Gluecksrad {
-    Scanner input = new Scanner(System.in);
-
     public static LinkedList<String> cityList() {
         LinkedList<String> cities = new LinkedList<>();
         cities.add("Dortmund");
@@ -25,7 +23,22 @@ public class Gluecksrad {
         Random randomGenerator = new Random();
         String randomCity = cityList().get(randomGenerator.nextInt(cityList().size()));
         System.out.println(randomCity);
+        if(randomCity != userInput()){
+          triesLeft();
+        }
+
     }
 
+    public static void triesLeft(){
+      for(int i = 6; i > 0; i--){
+        System.out.println("You have " + i + " tries left");
+      }
+    }
+
+    public String userInput(){
+      Scanner input = new Scanner(System.in);
+      System.out.println("Enter city name");
+      return input.nextLine();
+    }
 
 }
