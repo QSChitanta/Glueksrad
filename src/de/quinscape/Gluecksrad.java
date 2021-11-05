@@ -30,7 +30,6 @@ public class Gluecksrad {
     public void loadCurrentCity() {
         String randomCity = randomCityGenerator();
         setCurrentCity(randomCity);
-        printCurrentCity();
     }
 
     public void userInput() {
@@ -40,60 +39,55 @@ public class Gluecksrad {
 
     public void roundCounter(Scanner input) {
         boolean done = false;
-        int triesLeft = currentCity.length() * 2;
+        int maxTries = currentCity.length() * 2;
         boolean[] rightCharGuessed = new boolean[currentCity.length()];
-        System.out.println("You have " + triesLeft + " rounds to guess the right word.");
-        int round = 0;
-        emptyWordLine(rightCharGuessed);
+        System.out.println("You have " + maxTries + " rounds to guess the right word.");
+
+        int currentRound = 0;
+        wordOrLinePrinter(rightCharGuessed);
         while (!done) {
             String userInput = input.nextLine();
             char letter = userInput.toLowerCase().charAt(0);
 
             checkInput(letter, rightCharGuessed);
-            emptyWordLine(rightCharGuessed);
+            wordOrLinePrinter(rightCharGuessed);
 
-            if (round == triesLeft) {
+            if (currentRound == maxTries) {                             //austauschen: if und else if umdrehen
                 input.close();
                 System.out.println("Game over. No more tries left");
                 done = true;
             } else if (charGuessing(rightCharGuessed)) {
                 System.out.println("Word guessed, game is now ending...");
+                input.close();
+                done = true;
             } else {
-                round++;
-                System.out.println("Round " + round);
-                for(int i = 0; i < currentCity.length(); i++){
-                    if(currentCity.charAt(i) == letter){
-                        rightCharGuessed[i] = true;
-                    }
-                }
+                currentRound++;
+                System.out.println("Round " + currentRound);
             }
         }
     }
 
-    public void checkInput(char letter, boolean[] rightCharGuessed){
-        for(int i = 0; i < rightCharGuessed.length; i++){
-            if(currentCity.toLowerCase().charAt(i) == letter){
+    public void checkInput(char letter, boolean[] rightCharGuessed) {
+        for (int i = 0; i < rightCharGuessed.length; i++) {
+            if (currentCity.toLowerCase().charAt(i) == letter) {
                 rightCharGuessed[i] = true;
             }
         }
     }
 
-    public boolean charGuessing(boolean[] rightCharGuessed){
-        for(boolean i : rightCharGuessed) {
-            if(!i){
+    public boolean charGuessing(boolean[] rightCharGuessed) {
+        for (boolean i : rightCharGuessed) {
+            if (!i) {
                 return false;
             }
-        } return true;
+        }
+        return true;
     }
 
-    public void printCurrentCity() {
-        System.out.println("Current city is: " + currentCity);
-    }
-
-    public void emptyWordLine(boolean[] rightCharGuessed) { // _o_____
+    public void wordOrLinePrinter(boolean[] rightCharGuessed) {
         System.out.println("Guess the city with one letter at a time: ");
         for (int i = 0; i < currentCity.length(); i++) {
-            if(!rightCharGuessed[i]){
+            if (!rightCharGuessed[i]) {
                 System.out.print("_");
             } else {
                 System.out.print(currentCity.charAt(i));
