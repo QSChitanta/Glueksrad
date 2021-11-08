@@ -3,11 +3,12 @@ package de.quinscape;
 import java.util.*;
 
 public class Gluecksrad {
-    private Random randomGenerator = new Random();
-    private String currentWord;
+    private final Random randomGenerator = new Random();
+    private final Player player = new Player();
 
     public void startGame() {
         System.out.println("CITY GUESSER");
+        player.setPlayerName();
         randomWordGenerator();
         gameLoop();
     }
@@ -21,40 +22,35 @@ public class Gluecksrad {
         words.add("Hamburg");
         words.add("Berlin");
         return words;
-    } //
-
-    public void randomWordGenerator() {
-        currentWord = wordList().get(randomGenerator.nextInt(wordList().size()));
     }
 
-    public boolean checkInputLetterAmount(String userInput){
-        if(userInput.length() != 1){
-            return false;
-        }
-        return true;
+    public void randomWordGenerator() {
+        player.setCurrentWord(wordList().get(randomGenerator.nextInt(wordList().size())));
     }
 
     public void gameLoop() {
+        String name = player.getPlayerName();
         boolean done = false;
-        boolean[] rightCharGuessed = new boolean[currentWord.length()];
-        System.out.println("You have " + getMaxTries() + " rounds to guess the right word.");
+        boolean[] rightCharGuessed = new boolean[player.getCurrentWord().length()];
+        System.out.println("Hi " + name + ". You have " + player.getMaxTries() +
+                " rounds to guess the right word.");
 
         int currentRound = 0;
-        printWordToGuess(rightCharGuessed);
+        player.printWordToGuess(rightCharGuessed);
         while (!done) {
-            String userInput = getUserInput();
-            if(!checkInputLetterAmount(userInput)){
+            String userInput = player.getUserInput();
+            if(!player.checkInputLetterAmount(userInput)){
                 System.out.println("Guess the city with one letter at a time: ");
                 continue;
             }
             char letter = userInput.toLowerCase().charAt(0);
-            updateGuessedChar(letter, rightCharGuessed);
-            printWordToGuess(rightCharGuessed);
+            player.updateGuessedChar(letter, rightCharGuessed);
+            player.printWordToGuess(rightCharGuessed);
 
-            if (isGameWon(rightCharGuessed)) {
-                System.out.println("Word guessed, game is now ending...");
+            if (player.isGameWon(rightCharGuessed)) {
+                System.out.println(name + " won!" + " Game is now ending...");
                 done = true;
-            } else if (currentRound == getMaxTries()) {
+            } else if (currentRound == player.getMaxTries()) {
                 System.out.println("Game over. No more tries left");
                 done = true;
             } else {
@@ -62,44 +58,5 @@ public class Gluecksrad {
                 System.out.println("Round " + currentRound);
             }
         }
-    } //
-
-    public String getUserInput(){
-        Scanner charScanner = new Scanner(System.in);
-        return charScanner.nextLine();
-    }
-
-    private int getMaxTries() {
-        return currentWord.length() * 2;
-    }
-
-    public void updateGuessedChar(char letter, boolean[] rightCharGuessed) {
-        for (int i = 0; i < rightCharGuessed.length; i++) {
-            if (currentWord.toLowerCase().charAt(i) == letter) {
-                rightCharGuessed[i] = true;
-            }
-        }
-    }
-
-    public boolean isGameWon(boolean[] rightCharGuessed){
-        for(int i = 0; i < rightCharGuessed.length ; i++){
-            boolean done = rightCharGuessed[i];
-            if (!done) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void printWordToGuess(boolean[] rightCharGuessed) {
-        System.out.println("Guess the city with one letter at a time: ");
-        for (int i = 0; i < currentWord.length(); i++) {
-            if (!rightCharGuessed[i]) {
-                System.out.print("_");
-            } else {
-                System.out.print(currentWord.charAt(i));
-            }
-        }
-        System.out.println("\n");
     }
 }
