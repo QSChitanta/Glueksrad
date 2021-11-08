@@ -21,7 +21,7 @@ public class Gluecksrad {
         words.add("Hamburg");
         words.add("Berlin");
         return words;
-    }
+    } //
 
     public void randomWordGenerator() {
         currentWord = wordList().get(randomGenerator.nextInt(wordList().size()));
@@ -62,7 +62,7 @@ public class Gluecksrad {
                 System.out.println("Round " + currentRound);
             }
         }
-    }
+    } //
 
     public String getUserInput(){
         Scanner charScanner = new Scanner(System.in);
