@@ -4,14 +4,19 @@ import java.util.*;
 
 public class Gluecksrad {
     private final Random randomGenerator = new Random();
-    private final Player player = new Player();
+    private Player player;
 
     public void startGame() {
         System.out.println("CITY GUESSER");
-        System.out.println("Enter your name: ");
-        player.setPlayerName();
+        createPlayer();
         randomWordGenerator();
         gameLoop();
+    }
+
+    public void createPlayer(){
+        System.out.print("Enter your name: ");
+        String playerName = getUserInput();
+        player = new Player(playerName);
     }
 
     public static LinkedList<String> wordList() {
@@ -30,17 +35,10 @@ public class Gluecksrad {
         player.setCurrentWord(wordList().get(randomIndex));
     }
 
-    public boolean checkInputLetterAmount(String userInput){
-        if(userInput.length() != 1){
-            return false;
-        }
-        return true;
-    }
-
-    public void printWordToGuess(boolean[] rightCharGuessed) {
+    public void printWordToGuess() {
         System.out.println("Guess the city with one letter at a time: ");
         for (int i = 0; i < player.getCurrentWord().length(); i++) {
-            if (!rightCharGuessed[i]) {
+            if (!player.getRightCharGuessed()[i]) {
                 System.out.print("_");
             } else {
                 System.out.print(player.getCurrentWord().charAt(i));
@@ -49,30 +47,61 @@ public class Gluecksrad {
         System.out.println("\n");
     }
 
-    public void gameLoop() {
-        boolean done = false;
-        boolean[] rightCharGuessed = new boolean[player.getCurrentWord().length()];
-        System.out.println("Hi " + player.getPlayerName() + ". You have " + player.getMaxTries() +
-                " rounds to guess the right word.");
+    public String getUserInput(){
+        Scanner charScanner = new Scanner(System.in);
+        return charScanner.nextLine();
+    }
 
+    public int getMaxTries() {
+        return player.getCurrentWord().length() * 2;
+    }
+
+    public boolean checkInputLetterAmount(String userInput){
+        return userInput.length() == 1;
+    }
+
+    public void updateGuessedChar(char letter) {
+        for (int i = 0; i < player.getRightCharGuessed().length; i++) {
+            if (player.getCurrentWord().toLowerCase().charAt(i) == letter) {
+                player.getRightCharGuessed()[i] = true;
+            }
+        }
+    }
+
+    public boolean isGameWon(){
+        for(int i = 0; i < player.getRightCharGuessed().length ; i++){
+            boolean done = player.getRightCharGuessed()[i];
+            if (!done) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void gameLoop() {
+        boolean isGameOver = false;
+
+        System.out.println("Hi " + player.getPlayerName() + ". You have " + getMaxTries() +
+                " rounds to guess the right word.");
         int currentRound = 0;
-        printWordToGuess(rightCharGuessed);
-        while (!done) {
-            String userInput = player.getUserInput();
+        printWordToGuess();
+        while (!isGameOver) {
+            String userInput = getUserInput();
             if(!checkInputLetterAmount(userInput)){
                 System.out.println("Guess the city with one letter at a time: ");
                 continue;
             }
-            char letter = userInput.toLowerCase().charAt(0);
-            player.updateGuessedChar(letter, rightCharGuessed);
-            printWordToGuess(rightCharGuessed);
 
-            if (player.isGameWon(rightCharGuessed)) {
-                System.out.println(player.getPlayerName() + " won!" + " Game is now ending...");
-                done = true;
-            } else if (currentRound == player.getMaxTries()) {
+            char letter = userInput.toLowerCase().charAt(0);
+            updateGuessedChar(letter);
+            printWordToGuess();
+
+            if (isGameWon()) {
+                System.out.println("You win! Game is now ending...");
+                isGameOver = true;
+            } else if (currentRound == getMaxTries()) {
                 System.out.println("Game over. No more tries left");
-                done = true;
+                isGameOver = true;
             } else {
                 currentRound++;
                 System.out.println("Round " + currentRound);
