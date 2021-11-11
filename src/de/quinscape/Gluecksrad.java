@@ -2,6 +2,8 @@ package de.quinscape;
 
 import java.util.*;
 
+
+//new feature: möglichkeit das komplette wort einzugeben und direkt erraten
 public class Gluecksrad {
     private final Random randomGenerator = new Random();
     private Player player;
@@ -48,21 +50,17 @@ public class Gluecksrad {
     }
 
     public String getUserInput(){
-        Scanner charScanner = new Scanner(System.in);
-        return charScanner.nextLine();
+        Scanner stringScanner = new Scanner(System.in);
+        return stringScanner.nextLine();
     }
 
     public int getMaxTries() {
         return player.getCurrentWord().length() * 2;
     }
 
-    public boolean checkInputLetterAmount(String userInput){
-        return userInput.length() == 1;
-    }
-
-    public void updateGuessedChar(char letter) {
+    public void updateGuessedChar(String letter) {
         for (int i = 0; i < player.getRightCharGuessed().length; i++) {
-            if (player.getCurrentWord().toLowerCase().charAt(i) == letter) {
+            if (player.getCurrentWord().toLowerCase().equals(letter)) {
                 player.getRightCharGuessed()[i] = true;
             }
         }
@@ -87,13 +85,7 @@ public class Gluecksrad {
         printWordToGuess();
         while (!isGameOver) {
             String userInput = getUserInput();
-            if(!checkInputLetterAmount(userInput)){
-                System.out.println("Guess the city with one letter at a time: ");
-                continue;
-            }
-
-            char letter = userInput.toLowerCase().charAt(0);
-            updateGuessedChar(letter);
+            updateGuessedChar(userInput);
             printWordToGuess();
 
             if (isGameWon()) {
