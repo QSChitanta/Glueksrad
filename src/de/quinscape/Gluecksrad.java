@@ -2,8 +2,6 @@ package de.quinscape;
 
 import java.util.*;
 
-
-//new feature: möglichkeit das komplette wort einzugeben und direkt erraten
 public class Gluecksrad {
     private final Random randomGenerator = new Random();
     private Player player;
@@ -15,7 +13,7 @@ public class Gluecksrad {
         gameLoop();
     }
 
-    public void createPlayer(){
+    public void createPlayer() {
         System.out.print("Enter your name: ");
         String playerName = getUserInput();
         player = new Player(playerName);
@@ -49,25 +47,29 @@ public class Gluecksrad {
         System.out.println("\n");
     }
 
-    public String getUserInput(){
-        Scanner stringScanner = new Scanner(System.in);
-        return stringScanner.nextLine();
+    public String getUserInput() {
+        Scanner charScanner = new Scanner(System.in);
+        return charScanner.nextLine();
     }
 
     public int getMaxTries() {
         return player.getCurrentWord().length() * 2;
     }
 
-    public void updateGuessedChar(String letter) {
+    public boolean checkInputLetterAmount(String userInput) {
+        return userInput.length() == 1;
+    }
+
+    public void updateGuessedChar(char letter) {
         for (int i = 0; i < player.getRightCharGuessed().length; i++) {
-            if (player.getCurrentWord().toLowerCase().equals(letter)) {
+            if (player.getCurrentWord().toLowerCase().charAt(i) == letter) {
                 player.getRightCharGuessed()[i] = true;
             }
         }
     }
 
-    public boolean isGameWon(){
-        for(int i = 0; i < player.getRightCharGuessed().length ; i++){
+    public boolean isGameWon() {
+        for (int i = 0; i < player.getRightCharGuessed().length; i++) {
             boolean done = player.getRightCharGuessed()[i];
             if (!done) {
                 return false;
@@ -85,18 +87,26 @@ public class Gluecksrad {
         printWordToGuess();
         while (!isGameOver) {
             String userInput = getUserInput();
-            updateGuessedChar(userInput);
-            printWordToGuess();
-
-            if (isGameWon()) {
-                System.out.println("You win! Game is now ending...");
+            if (Objects.equals(userInput, player.getCurrentWord())) {
                 isGameOver = true;
-            } else if (currentRound == getMaxTries()) {
-                System.out.println("Game over. No more tries left");
-                isGameOver = true;
+                System.out.println("You win!!!");
+            } else if (!checkInputLetterAmount(userInput)) {
+                System.out.println("Guess the city with one letter at a time: ");
             } else {
-                currentRound++;
-                System.out.println("Round " + currentRound);
+                char letter = userInput.toLowerCase().charAt(0);
+                updateGuessedChar(letter);
+                printWordToGuess();
+
+                if (isGameWon()) {
+                    System.out.println("You win! Game is now ending...");
+                    isGameOver = true;
+                } else if (currentRound == getMaxTries()) {
+                    System.out.println("Game over. No more tries left");
+                    isGameOver = true;
+                } else {
+                    currentRound++;
+                    System.out.println("Round " + currentRound);
+                }
             }
         }
     }
