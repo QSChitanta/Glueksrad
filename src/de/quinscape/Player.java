@@ -2,17 +2,10 @@ package de.quinscape;
 
 import java.util.Scanner;
 
-public class Player {
+public class Player { //nur setter und getter, nur eigenschaften enthalten //alles raushauen was ne aktion macht , nur daten drin stehen
     private String playerName;
     private final Scanner sc = new Scanner (System.in);
     private String currentWord;
-
-    public boolean checkInputLetterAmount(String userInput){
-        if(userInput.length() != 1){
-            return false;
-        }
-        return true;
-    }
 
     public String getUserInput(){
         Scanner charScanner = new Scanner(System.in);
@@ -41,20 +34,7 @@ public class Player {
         return true;
     }
 
-    public void printWordToGuess(boolean[] rightCharGuessed) {
-        System.out.println("Guess the city with one letter at a time: ");
-        for (int i = 0; i < currentWord.length(); i++) {
-            if (!rightCharGuessed[i]) {
-                System.out.print("_");
-            } else {
-                System.out.print(currentWord.charAt(i));
-            }
-        }
-        System.out.println("\n");
-    }
-
     public void setPlayerName() {
-        System.out.println("Enter your name: ");
         this.playerName = sc.nextLine();
     }
 
@@ -69,6 +49,4 @@ public class Player {
     public String getCurrentWord() {
         return currentWord;
     }
-
-
 }
