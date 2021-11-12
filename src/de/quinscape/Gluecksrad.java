@@ -49,7 +49,7 @@ public class Gluecksrad {
 
     public String getUserInput() {
         Scanner charScanner = new Scanner(System.in);
-        return charScanner.nextLine();
+        return charScanner.nextLine().trim();
     }
 
     public int getMaxTries() {
@@ -80,14 +80,14 @@ public class Gluecksrad {
 
     public void gameLoop() {
         boolean isGameOver = false;
-
         System.out.println("Hi " + player.getPlayerName() + ". You have " + getMaxTries() +
                 " rounds to guess the right word.");
         int currentRound = 0;
         printWordToGuess();
         while (!isGameOver) {
             String userInput = getUserInput();
-            if (Objects.equals(userInput, player.getCurrentWord())) {
+            if (Objects.equals(userInput.compareToIgnoreCase(player.getCurrentWord()),
+                    player.getCurrentWord().compareToIgnoreCase(userInput))) {
                 isGameOver = true;
                 System.out.println("You win!!!");
             } else if (!checkInputLetterAmount(userInput)) {
