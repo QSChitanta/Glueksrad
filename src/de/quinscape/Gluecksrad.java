@@ -86,8 +86,7 @@ public class Gluecksrad {
         printWordToGuess();
         while (!isGameOver) {
             String userInput = getUserInput();
-            if (Objects.equals(userInput.compareToIgnoreCase(player.getCurrentWord()),
-                    player.getCurrentWord().compareToIgnoreCase(userInput))) {
+            if(userInput.equalsIgnoreCase(player.getCurrentWord())){
                 isGameOver = true;
                 System.out.println("You win!!!");
             } else if (!checkInputLetterAmount(userInput)) {
@@ -96,7 +95,6 @@ public class Gluecksrad {
                 char letter = userInput.toLowerCase().charAt(0);
                 updateGuessedChar(letter);
                 printWordToGuess();
-
                 if (isGameWon()) {
                     System.out.println("You win! Game is now ending...");
                     isGameOver = true;
